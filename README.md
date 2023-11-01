@@ -1,5 +1,7 @@
 # cs7is3-group8
 
+After you clone this project to your system, **put your `Assignment Two` folder and `topics` file into the main project folder** - they are excluded in the gitignore.
+
 Code is located in `/src/main/java`.
 
 Hopefully compilable with maven by running `mvn package`.
