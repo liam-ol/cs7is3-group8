@@ -1,4 +1,4 @@
-package search.engine;
+//package search.engine;
 
 import org.apache.lucene.*;
 import java.io.IOException;
