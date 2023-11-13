@@ -6,18 +6,27 @@
 
 
 public class Doc {
-    int id;
+    String id;
     String title;
     String subtitle;
     String summary;
     String body;
 
-    public Doc(int id, String title, String subtitle, String summary, String body)
+    public Doc(String id, String title, String subtitle, String summary, String body)
     {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
         this.summary = summary;
         this.body = body;
+    }
+
+    // Test printing function.
+    public void print() {
+        System.out.printf("ID: %s\n",this.id);
+        System.out.printf("TITLE: %s\n",this.title);
+        System.out.printf("SUBTITLE: %s\n",this.subtitle);
+        System.out.printf("SUMMARY: %s\n",this.summary);
+        System.out.printf("BODY: %s\n",this.body);
     }
 }
