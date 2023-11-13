@@ -35,7 +35,7 @@ public class DocParser {
 
         // All docs have a <DOCNO> and <TEXT>.
         docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
-        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent().trim();
+        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent().replaceAll("\n\n","");
 
         // For other tags, check if they exist first.
         NodeList title = doc.getElementsByTagName("DOCTITLE");
