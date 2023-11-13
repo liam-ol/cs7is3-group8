@@ -1,8 +1,10 @@
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 public class DocParser {
 
@@ -16,29 +18,36 @@ public class DocParser {
         return docFile.trim().split("(?<=/DOC>)\\n");
     }
 
-    public static Doc parseFR94(String docRaw, DocumentBuilder parser) throws IOException, SAXException {
-        String docTitle, docSummary, docBody;
+    public static Document readXML(String doc, DocumentBuilder parser) throws Exception {
+        InputSource docInput = new InputSource(new StringReader(doc));
+        return parser.parse(docInput);
+    }
+
+    public static Doc parseFR94(String docRaw, DocumentBuilder parser) throws Exception {
+        String docID, docTitle, docSummary, docBody;
+
         // First some bulk replaces: remove all comments and &blank;s
         String docClean = docRaw.replaceAll("<!--.*-->\\n", "")
                 .replaceAll("&blank;", " ")
                 .replaceAll("&hyph;", "-");
 
-        // TODO: Set up a DocumentBuilder instance in Main - we can pass it into these functions and save time.
-        Document doc = parser.parse(docClean);
+        Document doc = readXML(docClean, parser);
 
-        // All docs have a <DOCID> and <TEXT>.
-        int docID = Integer.parseInt(doc.getElementsByTagName("DOCID").item(0).getTextContent());
-        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent();
+        // All docs have a <DOCNO> and <TEXT>.
+        docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
+        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent().trim();
 
         // For other tags, check if they exist first.
         NodeList title = doc.getElementsByTagName("DOCTITLE");
-        if (title.getLength() > 0)
-            docTitle = title.item(0).getTextContent();
-        else docTitle = "";
+        docTitle = (title.getLength() > 0)
+                ? title.item(0).getTextContent()
+                : "";
+
         NodeList summary = doc.getElementsByTagName("SUMMARY");
-        if (summary.getLength() > 0)
-            docSummary = summary.item(0).getTextContent();
-        else docSummary = "";
+        docSummary = (summary.getLength() > 0)
+                ? summary.item(0).getTextContent()
+                    .replace("SUMMARY:","").trim()
+                : "";
 
         return new Doc(docID, docTitle, "", docSummary, docBody);
     }
