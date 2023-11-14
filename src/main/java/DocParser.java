@@ -52,16 +52,43 @@ public class DocParser {
         return new Doc(docID, docTitle, "", docSummary, docBody);
     }
 
+    public static Doc parseFBIS(String docRaw, DocumentBuilder parser) throws Exception  {
+        String docID, docTitle, docSubtitle, docSummary, docBody;
+
+        // Parser doesn't like the <F> tags in these docs, and they're not too important anyway.
+        String docClean = docRaw.replaceAll("<F.*</F>\\n", "");
+        Document doc = readXML(docClean, parser);
+
+        docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
+        docTitle = doc.getElementsByTagName("TI").item(0).getTextContent().trim();
+        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent()
+                .replaceFirst("[\\s\\S]*] ","");
+
+        NodeList subtitle = doc.getElementsByTagName("H4");
+        docSubtitle = (subtitle.getLength() > 0)
+                ? subtitle.item(0).getTextContent()
+                : "";
+
+        // Summaries are tricky - many ways they are written.
+        // Check for summaries bookended with 'SUMMARY' + 'END SUMMARY'.
+        if (docBody.contains("END SUMMARY"))
+        {
+            docSummary = docBody.split("END SUMMARY")[0]
+                    .replaceAll("SUMMARY", "").trim();
+        } else {
+            // For BFN articles, just use the first paragraph.
+            docSummary = docBody.split("\\n {2}")[0];
+        }
+
+        return new Doc(docID, docTitle, docSubtitle, docSummary, docBody);
+    }
+
     /* TODO: add parsing functions for each other doc type
-    public static Doc parseFBIS(String docRaw, DocumentBuilder parser) throws IOException, SAXException  {
+    public static Doc parseFT(String docRaw, DocumentBuilder parser) throws Exception {
 
     }
 
-    public static Doc parseFT(String docRaw, DocumentBuilder parser) throws IOException, SAXException  {
-
-    }
-
-    public static Doc parseLATimes(String docRaw, DocumentBuilder parser) throws IOException, SAXException  {
+    public static Doc parseLATimes(String docRaw, DocumentBuilder parser) throws Exception  {
 
     }
 
