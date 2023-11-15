@@ -104,14 +104,20 @@ public class DocParser {
         return new Doc(docID, docTitle, "", "", docBody);
 
     }
-    /* TODO: add parsing functions for each other doc type
-    public static Doc parseFT(String docRaw, DocumentBuilder parser) throws Exception {
-
-    }
 
     public static Doc parseLATimes(String docRaw, DocumentBuilder parser) throws Exception  {
+        String docID, docTitle, docSubtitle, docSummary, docBody;
 
+        // Remove <P> tags.
+        String docClean = docRaw.replaceAll("<\\/?P>", "");
+        Document doc = readXML(docClean, parser);
+
+        docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
+        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent().trim();
+        docTitle = doc.getElementsByTagName("HEADLINE").item(0).getTextContent().replaceAll("\\n", "");
+        docSubtitle = doc.getElementsByTagName("TYPE").item(0).getTextContent().trim();
+        docSummary = docBody.split("\\n\\n\\n")[0];
+
+        return new Doc(docID, docTitle, docSubtitle, docSummary, docBody);
     }
-
-     */
 }

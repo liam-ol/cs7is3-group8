@@ -27,6 +27,13 @@ public class Main {
         testDoc.print();
         System.out.println();
 
+        // Test parsing of a document from the LA Times set.
+        testDocsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get("./Assignment Two/latimes/la010189"))));
+        testDoc = DocParser.parseLATimes(testDocsRaw[1], builder);
+        System.out.println("Printing parsed FR94 document");
+        testDoc.print();
+        System.out.println();
+
         /* TOPIC PARSING */
         TopicParser tparser = new TopicParser();
         System.out.println("The following topics have been parsed:");
