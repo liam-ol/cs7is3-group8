@@ -9,6 +9,9 @@ public class Main {
         /* DOCUMENT PARSING */
         // This DocumentBuilder instance is passed to every parse function call, saving resources.
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        
+        Indexer indexer = new Indexer();
+        indexer.readDocuments();
 
         // Test parsing of a document from the FR94 set.
         String[] testDocsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get("./Assignment Two/fr94/01/fr940104.0"))));
