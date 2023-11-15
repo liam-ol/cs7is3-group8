@@ -6,6 +6,9 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 public class DocParser {
 
     /**
@@ -83,6 +86,24 @@ public class DocParser {
         return new Doc(docID, docTitle, docSubtitle, docSummary, docBody);
     }
 
+    public static Doc parseFT(String docRaw, DocumentBuilder parser) throws Exception {
+        String docID, docTitle, docHeadline, docBody;
+        Document doc = readXML(docRaw, parser);
+        docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
+        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent().trim();
+
+        docHeadline = doc.getElementsByTagName("HEADLINE").item(0).getTextContent().trim();
+        Pattern pattern = Pattern.compile("FT\\s*\\d+\\s*\\S+\\s*\\d+\\s*/\\s*\\(CORRECTED\\)\\s*(?<title>[\\S\\s]+)");
+        Matcher matcher = pattern.matcher(docHeadline);
+        if (matcher.find()) {
+            docTitle = matcher.group("title");
+        }
+        else {
+            docTitle = "";
+        }
+        return new Doc(docID, docTitle, "", "", docBody);
+
+    }
     /* TODO: add parsing functions for each other doc type
     public static Doc parseFT(String docRaw, DocumentBuilder parser) throws Exception {
 
