@@ -56,21 +56,33 @@ public class DocParser {
     }
 
     public static Doc parseFBIS(String docRaw, DocumentBuilder parser) throws Exception  {
-        String docID, docTitle, docSubtitle, docSummary, docBody;
+        String docID = "", docTitle = "", docSubtitle = "", docSummary = "", docBody = "";
+        Pattern pattern;
+        Matcher matcher;
 
-        // Parser doesn't like the <F> tags in these docs, and they're not too important anyway.
-        String docClean = docRaw.replaceAll("<F.*</F>\\n", "");
-        Document doc = readXML(docClean, parser);
+        pattern = Pattern.compile("<DOCNO>(.*?)</DOCNO>");
+        matcher = pattern.matcher(docRaw);
+        if (matcher.find()) {
+            docID = matcher.group(1).trim();
+        }
 
-        docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
-        docTitle = doc.getElementsByTagName("TI").item(0).getTextContent().trim();
-        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent()
-                .replaceFirst("[\\s\\S]*] ","");
+        pattern = Pattern.compile("<TI>([\\s\\S]*)</TI>");
+        matcher = pattern.matcher(docRaw);
+        if (matcher.find()) {
+            docTitle = matcher.group(1).trim();
+        }
 
-        NodeList subtitle = doc.getElementsByTagName("H4");
-        docSubtitle = (subtitle.getLength() > 0)
-                ? subtitle.item(0).getTextContent()
-                : "";
+        pattern = Pattern.compile("<H4>([\\s\\S]*)</H4>");
+        matcher = pattern.matcher(docRaw);
+        if (matcher.find()) {
+            docSubtitle = matcher.group(1).trim();
+        }
+
+        pattern = Pattern.compile("<TEXT>([\\s\\S]*)</TEXT>");
+        matcher = pattern.matcher(docRaw);
+        if (matcher.find()) {
+            docBody = matcher.group(1).trim();
+        }
 
         // Summaries are tricky - many ways they are written.
         // Check for summaries bookended with 'SUMMARY' + 'END SUMMARY'.
@@ -78,21 +90,30 @@ public class DocParser {
         {
             docSummary = docBody.split("END SUMMARY")[0]
                     .replaceAll("SUMMARY", "").trim();
-        } else {
+        } else if (!docBody.equals("")) {
             // For BFN articles, just use the first paragraph.
             docSummary = docBody.split("\\n {2}")[0];
         }
+        return new Doc(docID, docTitle, docSubtitle, docSummary, docBody);       
 
-        return new Doc(docID, docTitle, docSubtitle, docSummary, docBody);
     }
 
     public static Doc parseFT(String docRaw, DocumentBuilder parser) throws Exception {
-        String docID, docTitle, docHeadline, docBody;
+        String docID = "", docTitle = "", docHeadline = "", docBody = "";
+
         Document doc = readXML(docRaw, parser);
         docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
-        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent().trim();
 
-        docHeadline = doc.getElementsByTagName("HEADLINE").item(0).getTextContent().trim();
+        NodeList body = doc.getElementsByTagName("TEXT");
+        docBody = (body.getLength() > 0)
+            ? body.item(0).getTextContent().trim()
+            : doc.getElementsByTagName("DATELINE").item(0).getTextContent().trim();
+        
+        NodeList headline = doc.getElementsByTagName("HEADLINE");
+        docHeadline = (headline.getLength() > 0)
+            ? headline.item(0).getTextContent().trim()
+            : "";
+
         Pattern pattern = Pattern.compile("FT\\s*\\d+\\s*\\S+\\s*\\d+\\s*/\\s*\\(CORRECTED\\)\\s*(?<title>[\\S\\s]+)");
         Matcher matcher = pattern.matcher(docHeadline);
         if (matcher.find()) {
