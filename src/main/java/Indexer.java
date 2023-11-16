@@ -16,7 +16,7 @@ public class Indexer {
     static final String _DOC_ROOT_PATH = "./Assignment Two/";
     static final String _FT_PATH = _DOC_ROOT_PATH + "ft/";
     static final String _FR94_PATH = _DOC_ROOT_PATH + "fr94/";
-    static final String _FBI_PATH = _DOC_ROOT_PATH + "fbis/";
+    static final String _FBIS_PATH = _DOC_ROOT_PATH + "fbis/";
     static final String _LATIMES_PATH = _DOC_ROOT_PATH + "latimes/";
 
     //public Indexer(Analyzer global_analyzer, Similarity global_similarity, Directory global_directory)
@@ -46,7 +46,7 @@ public class Indexer {
     // TODO: Index the parsed documents.
     public void readDocuments() throws Exception {
         File currDir = null;
-        String[] docRootPaths = {_FBI_PATH, _FR94_PATH, _FT_PATH, _LATIMES_PATH};
+        String[] docRootPaths = {_FBIS_PATH, _FR94_PATH, _FT_PATH, _LATIMES_PATH};
         ArrayList<Doc> docList = new ArrayList<Doc>();
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
@@ -55,14 +55,27 @@ public class Indexer {
         createFileList(currDir.listFiles(), filesToParse);
         System.out.println("filesToParse size for FT: " + filesToParse.size());
 
-        // ATTENTION: Throws exception and must be fixed!
+        // for (File currFile : filesToParse) {
+        //     String[] docsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get(currFile.getAbsolutePath()))));
+        //     for (String currDoc : docsRaw) {
+        //         docList.add(DocParser.parseFT(currDoc, builder));
+        //     }
+        // }
+        // System.out.println("FT documents parsed: " + docList.size());
+        // System.out.println();
+
+        currDir = new File(_FBIS_PATH);
+        filesToParse = new ArrayList<File>();
+        createFileList(currDir.listFiles(), filesToParse);
+        System.out.println("filesToParse size for FBIS: " + filesToParse.size());
+
         for (File currFile : filesToParse) {
             String[] docsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get(currFile.getAbsolutePath()))));
             for (String currDoc : docsRaw) {
-                docList.add(DocParser.parseFT(currDoc, builder));
+                docList.add(DocParser.parseFBIS(currDoc, builder));
             }
         }
-        System.out.println("FT documents parsed: " + docList.size());
+        System.out.println("FBIS documents parsed: " + docList.size());
         System.out.println();
     }
 
