@@ -47,35 +47,71 @@ public class Indexer {
     public void readDocuments() throws Exception {
         File currDir = null;
         String[] docRootPaths = {_FBIS_PATH, _FR94_PATH, _FT_PATH, _LATIMES_PATH};
-        ArrayList<Doc> docList = new ArrayList<Doc>();
+        ArrayList<Doc> docList = new ArrayList<>();
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
         currDir = new File(_FT_PATH);
-        ArrayList<File> filesToParse = new ArrayList<File>();
+        ArrayList<File> filesToParse = new ArrayList<>();
         createFileList(currDir.listFiles(), filesToParse);
         System.out.println("filesToParse size for FT: " + filesToParse.size());
 
-        // for (File currFile : filesToParse) {
-        //     String[] docsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get(currFile.getAbsolutePath()))));
-        //     for (String currDoc : docsRaw) {
-        //         docList.add(DocParser.parseFT(currDoc, builder));
-        //     }
-        // }
-        // System.out.println("FT documents parsed: " + docList.size());
-        // System.out.println();
+        for (File currFile : filesToParse) {
+            String[] docsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get(currFile.getAbsolutePath()))));
+            for (String currDoc : docsRaw) {
+                docList.add(DocParser.parseFT(currDoc, builder));
+            }
+        }
+        System.out.println("Total documents parsed: " + docList.size());
+        System.out.println();
 
         currDir = new File(_FBIS_PATH);
-        filesToParse = new ArrayList<File>();
+        filesToParse = new ArrayList<>();
         createFileList(currDir.listFiles(), filesToParse);
         System.out.println("filesToParse size for FBIS: " + filesToParse.size());
 
         for (File currFile : filesToParse) {
             String[] docsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get(currFile.getAbsolutePath()))));
             for (String currDoc : docsRaw) {
-                docList.add(DocParser.parseFBIS(currDoc, builder));
+                docList.add(DocParser.parseFBIS(currDoc));
             }
         }
-        System.out.println("FBIS documents parsed: " + docList.size());
+        System.out.println("Total documents parsed: " + docList.size());
+        System.out.println();
+
+        currDir = new File(_FR94_PATH);
+        filesToParse = new ArrayList<>();
+        createFileList(currDir.listFiles(), filesToParse);
+        System.out.println("filesToParse size for FR94: " + filesToParse.size());
+
+        for (File currFile : filesToParse) {
+            String[] docsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get(currFile.getAbsolutePath()))));
+            for (String currDoc : docsRaw) {
+                try {
+                    docList.add(DocParser.parseFR94(currDoc, builder));
+                } catch (Exception e) {
+                    System.out.println(currDoc);
+                }
+            }
+        }
+        System.out.println("Total documents parsed: " + docList.size());
+        System.out.println();
+
+        currDir = new File(_LATIMES_PATH);
+        filesToParse = new ArrayList<>();
+        createFileList(currDir.listFiles(), filesToParse);
+        System.out.println("filesToParse size for LA Times: " + filesToParse.size());
+
+        for (File currFile : filesToParse) {
+            String[] docsRaw = DocParser.getDocList(new String(Files.readAllBytes(Paths.get(currFile.getAbsolutePath()))));
+            for (String currDoc : docsRaw) {
+                try {
+                    docList.add(DocParser.parseLATimes(currDoc, builder));
+                } catch (Exception e) {
+                    System.out.println(currDoc);
+                }
+            }
+        }
+        System.out.println("Total documents parsed: " + docList.size());
         System.out.println();
     }
 

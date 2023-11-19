@@ -31,8 +31,7 @@ public class DocParser {
 
         // First some bulk replaces: remove all comments and &blank;s
         String docClean = docRaw.replaceAll("<!--.*-->\\n", "")
-                .replaceAll("&blank;", " ")
-                .replaceAll("&hyph;", "-");
+                .replaceAll("&.*;", " ");
 
         Document doc = readXML(docClean, parser);
 
@@ -55,7 +54,7 @@ public class DocParser {
         return new Doc(docID, docTitle, "", docSummary, docBody);
     }
 
-    public static Doc parseFBIS(String docRaw, DocumentBuilder parser) throws Exception  {
+    public static Doc parseFBIS(String docRaw) throws Exception  {
         String docID = "", docTitle = "", docSubtitle = "", docSummary = "", docBody = "";
         Pattern pattern;
         Matcher matcher;
@@ -90,7 +89,7 @@ public class DocParser {
         {
             docSummary = docBody.split("END SUMMARY")[0]
                     .replaceAll("SUMMARY", "").trim();
-        } else if (!docBody.equals("")) {
+        } else if (!docBody.isEmpty()) {
             // For BFN articles, just use the first paragraph.
             docSummary = docBody.split("\\n {2}")[0];
         }
@@ -99,7 +98,7 @@ public class DocParser {
     }
 
     public static Doc parseFT(String docRaw, DocumentBuilder parser) throws Exception {
-        String docID = "", docTitle = "", docHeadline = "", docBody = "";
+        String docID, docTitle, docHeadline, docBody;
 
         Document doc = readXML(docRaw, parser);
         docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
@@ -134,9 +133,22 @@ public class DocParser {
         Document doc = readXML(docClean, parser);
 
         docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
-        docBody = doc.getElementsByTagName("TEXT").item(0).getTextContent().trim();
-        docTitle = doc.getElementsByTagName("HEADLINE").item(0).getTextContent().replaceAll("\\n", "");
-        docSubtitle = doc.getElementsByTagName("TYPE").item(0).getTextContent().trim();
+
+        NodeList body = doc.getElementsByTagName("TEXT");
+        docBody = (body.getLength() > 0)
+                ? body.item(0).getTextContent().trim()
+                : doc.getElementsByTagName("GRAPHIC").item(0).getTextContent().trim();
+
+        NodeList title = doc.getElementsByTagName("HEADLINE");
+        docTitle = (title.getLength() > 0)
+                ? title.item(0).getTextContent().trim()
+                : "";
+
+        NodeList subtitle = doc.getElementsByTagName("SUBJECT");
+        docSubtitle = (subtitle.getLength() > 0)
+                ? subtitle.item(0).getTextContent().trim()
+                : "";
+
         docSummary = docBody.split("\\n\\n\\n")[0];
 
         return new Doc(docID, docTitle, docSubtitle, docSummary, docBody);
