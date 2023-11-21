@@ -31,13 +31,16 @@ public class Main {
 
         /* TOPIC PARSING */
         TopicParser tparser = new TopicParser();
-        // System.out.println("The following topics have been parsed:");
-        // for (Topic top: tparser.topics) {
-        //     System.out.print(top.id + ", ");
-        // }
-        // System.out.println();
+
+        // TODO: Fix it, no results returned!
+        /* INDEX QUERYING */
+        Querier querier = new Querier(analyzer, similarity, directory);
+        for (Topic top: tparser.topics) {
+            querier.queryIndex(top.id, top.description);
+        }
 
         indexer.shutDown();
+        querier.shutDown();
         directory.close();
     }
 }
