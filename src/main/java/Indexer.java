@@ -26,11 +26,11 @@ public class Indexer {
     static final String _FBIS_PATH = _DOC_ROOT_PATH + "fbis/";
     static final String _LATIMES_PATH = _DOC_ROOT_PATH + "latimes/";
 
-    public Indexer(Analyzer engine_analyzer, Similarity engine_similarity, Directory index_directory) throws IOException {
-        IndexWriterConfig config = new IndexWriterConfig(engine_analyzer);
-		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-        config.setSimilarity(engine_similarity);
-		this.iwriter = new IndexWriter(index_directory, config);
+    public Indexer(Analyzer engineAnalyzer, Similarity engineSimilarity, Directory indexDirectory) throws IOException {
+        IndexWriterConfig config = new IndexWriterConfig(engineAnalyzer);
+        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        config.setSimilarity(engineSimilarity);
+        this.iwriter = new IndexWriter(indexDirectory, config);
     }
 
     // This function reads all the files in a directory and appends them to a list.
