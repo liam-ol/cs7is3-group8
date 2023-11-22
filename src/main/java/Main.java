@@ -29,6 +29,8 @@ public class Main {
             indexer.readAndIndexDocuments();
         }
 
+        indexer.shutDown();
+
         /* TOPIC PARSING */
         TopicParser tparser = new TopicParser();
 
@@ -38,8 +40,6 @@ public class Main {
         for (Topic top: tparser.topics) {
             querier.queryIndex(top.id, top.description);
         }
-
-        indexer.shutDown();
         querier.shutDown();
         directory.close();
     }
