@@ -1,6 +1,8 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.lucene.document.Document;
 
@@ -19,7 +21,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 
 public class Querier {
 
-    static final Integer _MAX_RESULTS = 50;
+    static final Integer _MAX_RESULTS = 1000;
     static final String _QUERY_RESULTS_FILE = "./results.txt";
 
     private IndexSearcher isearcher;
@@ -35,7 +37,9 @@ public class Querier {
 
         // Create a parser configure it with an analyzer and fields to query.
         String[] queryFields = new String[] {"title", "subtitle", "body", "summary"};
-        this.parser = new MultiFieldQueryParser(queryFields, engineAnalyzer);
+        Map<String, Float> boosts = new HashMap<>();
+        boosts.put("body", 5f);
+        this.parser = new MultiFieldQueryParser(queryFields, engineAnalyzer, boosts);
 
         // Open the results file for writing.
         this.queryResultsWriter = new BufferedWriter(new FileWriter(_QUERY_RESULTS_FILE));
