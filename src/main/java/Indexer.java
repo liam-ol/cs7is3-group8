@@ -7,7 +7,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.Document;
@@ -70,7 +69,6 @@ public class Indexer {
     // and passes them to the indexDocument function.
     public void readAndIndexDocuments() throws Exception {
         File currDir = null;
-        String[] docRootPaths = {_FBIS_PATH, _FR94_PATH, _FT_PATH, _LATIMES_PATH};
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
         currDir = new File(_FT_PATH);

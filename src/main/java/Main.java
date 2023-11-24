@@ -1,5 +1,3 @@
-import javax.xml.parsers.*;
-
 import java.nio.file.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -34,7 +32,6 @@ public class Main {
         /* TOPIC PARSING */
         TopicParser tparser = new TopicParser();
 
-        // TODO: Fix it, no results returned!
         /* INDEX QUERYING */
         Querier querier = new Querier(analyzer, similarity, directory);
         for (Topic top: tparser.topics) {
