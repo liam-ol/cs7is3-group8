@@ -36,7 +36,8 @@ public class Querier {
         // Create a parser configure it with an analyzer and fields to query.
         String[] queryFields = new String[] {"title", "subtitle", "body", "summary"};
         Map<String, Float> boosts = new HashMap<>();
-        boosts.put("body", 5f);
+        boosts.put("body", 10f);
+        boosts.put("title", 0.5f);
         this.parser = new MultiFieldQueryParser(queryFields, engineAnalyzer, boosts);
 
         // Open the results file for writing.
