@@ -1,4 +1,3 @@
-import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -8,8 +7,6 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.NativeQuery;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class DbInterface {
 
@@ -63,6 +60,14 @@ public class DbInterface {
         Embedding embedding = query.getSingleResultOrNull();
         embedding.convertToFloat();
         return embedding;
+    }
+
+    public List<String> getDocumentIds() {
+        this.startSession();
+        String sql = "SELECT id FROM embeddings;";
+        NativeQuery<String> query = this.currSession.createNativeQuery(sql, String.class);
+        List<String> docIds = query.getResultList();
+        return docIds;
     }
 
     public void shutDown() {
