@@ -34,32 +34,23 @@ public class Indexer {
         return;
     }
 
-    // This function read all documents to be indexed
-    // and passes them to the indexDocument function.
+    // This function reads all document embeddings from the database
+    // and creates an index using these embeddings.
     public void readAndIndexDocuments() throws Exception {
 
         this.db.startSession();
 
-        Integer count = 0;
         Embedding currEmbedding;
         List<String> docIds = this.db.getDocumentIds();
         for (String docId : docIds) {
             currEmbedding = this.db.getEmbedding(docId);
-            if (currEmbedding.wordEmbedding.length != 768) {
-                System.out.println("Invalid vector size: " + currEmbedding.id);
-            }
-            else {
-                Document luceneDocument = new Document();
-                luceneDocument.add(new StringField("id", currEmbedding.id, Field.Store.YES));
-                luceneDocument.add(new KnnVectorField("body", currEmbedding.wordEmbedding, VectorSimilarityFunction.EUCLIDEAN));
-                this.iwriter.addDocument(luceneDocument);
-                count++;
-                System.out.println(count);
-            }
+            Document luceneDocument = new Document();
+            luceneDocument.add(new StringField("id", currEmbedding.id, Field.Store.YES));
+            luceneDocument.add(new KnnVectorField("body", currEmbedding.embeddingFloat, VectorSimilarityFunction.EUCLIDEAN));
+            this.iwriter.addDocument(luceneDocument);
         }
-
         System.out.println("Finished storing all documents in database");
-        db.shutDown();
+        this.db.shutDown();
     }
 
 }

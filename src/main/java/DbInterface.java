@@ -16,6 +16,8 @@ public class DbInterface {
     private Integer queriesInTransaction;
     private final Integer _MAX_QUERIES_IN_TRANSACTION = 25;
 
+    // This class creates a connection to the SQLite database 
+    // using the Hibernate ORM framework.
     public DbInterface() {
         Configuration configuration = new Configuration();
         configuration.configure("hibernate.cfg.xml");
@@ -26,6 +28,7 @@ public class DbInterface {
         this.currSession = null;
     }
 
+    // Start a session to the database.
     public void startSession() {
         if (this.currSession == null) {
             this.currSession = this.sfactory.openSession();
@@ -34,6 +37,7 @@ public class DbInterface {
         }
     }
 
+    // Insert a parsed document to the database.
     public void addDocument(Doc doc) {
         String sql = "INSERT INTO docs (id, body, title, subtitle, summary) values (?, ?, ?, ?, ?);";
         NativeQuery<Doc> query = this.currSession.createNativeQuery(sql, Doc.class);
@@ -52,6 +56,7 @@ public class DbInterface {
         }
     }
 
+    // Retrieve the text embedding for a document from the database.
     public Embedding getEmbedding(String docId) {
         this.startSession();
         String sql = "SELECT id, embedding FROM embeddings where id = ?;";
@@ -62,6 +67,7 @@ public class DbInterface {
         return embedding;
     }
 
+    // Get a list with the IDs of all documents in the database.
     public List<String> getDocumentIds() {
         this.startSession();
         String sql = "SELECT id FROM embeddings;";
@@ -70,6 +76,7 @@ public class DbInterface {
         return docIds;
     }
 
+    // Commit and close database connection gracefully.
     public void shutDown() {
         this.currTransaction.commit();
         System.out.println("Transaction completed");

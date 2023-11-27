@@ -18,7 +18,6 @@ public class ApiClient {
     public float[] fetchEmbedding (String text) throws Exception {
 
         // JSON payload
-        // String jsonPayload = "{\"text\": \"" + text + "\"}";
         String jsonPayload = new JSONObject().put("text", text).toString();
 
         // Create a URL object
@@ -55,7 +54,6 @@ public class ApiClient {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            // System.out.println("Response: " + response.toString());
         }
 
         // Close the connection

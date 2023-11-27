@@ -22,9 +22,10 @@ public class Querier {
     
     public Querier(Directory indexDirectory) throws IOException {
 
+        // Create an ApiClient which will fetch the query embeddings.
         this.embeddingFetcher = new ApiClient();
 
-        // Create an IndexSearcher and set the similarity algorithm.
+        // Create an IndexSearcher.
         DirectoryReader indexDirectoryReader = DirectoryReader.open(indexDirectory);
         this.isearcher = new IndexSearcher(indexDirectoryReader);
 
@@ -33,6 +34,7 @@ public class Querier {
         return;
     }
 
+    // Close the query results writer.
     public void shutDown() throws IOException {
         this.queryResultsWriter.close();
         return;
@@ -42,6 +44,7 @@ public class Querier {
 
         int docRank = 0;
 
+        // Fetch the text embedding of the query and generate a vector query.
         float[] queryVector = this.embeddingFetcher.fetchEmbedding(queryString);
         KnnVectorQuery query = new KnnVectorQuery("body", queryVector, _MAX_RESULTS);
 
