@@ -39,7 +39,8 @@ build/
 
 Assignment Two/
 topics
-index
+index*
 results.txt
 trec_eval*
 *qrel*
+db

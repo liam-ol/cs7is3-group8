@@ -1,5 +1,3 @@
-//package search.engine;
-
 // The Topic class holds all information about a topic.
 public class Topic {
     int id;

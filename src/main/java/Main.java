@@ -1,5 +1,3 @@
-import javax.xml.parsers.*;
-
 import java.nio.file.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -12,7 +10,7 @@ import org.apache.lucene.search.similarities.BM25Similarity;
 
 public class Main {
 
-    private static String INDEX_DIRECTORY = "./index";
+    private static String INDEX_DIRECTORY = "./index-vector";
 
     public static void main(String[] args) throws Exception {
 
@@ -31,16 +29,18 @@ public class Main {
 
         indexer.shutDown();
 
-        /* TOPIC PARSING */
-        TopicParser tparser = new TopicParser();
+        // EmbeddingIndexer embIndexer = new EmbeddingIndexer(analyzer, similarity, directory);
+        // embIndexer.indexEmbeddings();
 
-        // TODO: Fix it, no results returned!
+        /* TOPIC PARSING */
+        // TopicParser tparser = new TopicParser();
+
         /* INDEX QUERYING */
-        Querier querier = new Querier(analyzer, similarity, directory);
-        for (Topic top: tparser.topics) {
-            querier.queryIndex(top.id, top.description);
-        }
-        querier.shutDown();
-        directory.close();
+        // Querier querier = new Querier(analyzer, similarity, directory);
+        // for (Topic top: tparser.topics) {
+        //     querier.queryIndex(top.id, top.description);
+        // }
+        // querier.shutDown();
+        // directory.close();
     }
 }
