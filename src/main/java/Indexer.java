@@ -14,6 +14,7 @@ public class Indexer {
 
     private IndexWriter iwriter;
     private DbInterface db;
+    private String transformerModel;
 
     static final String _DOC_ROOT_PATH = "./Assignment Two/";
     static final String _FT_PATH = _DOC_ROOT_PATH + "ft/";
@@ -21,11 +22,12 @@ public class Indexer {
     static final String _FBIS_PATH = _DOC_ROOT_PATH + "fbis/";
     static final String _LATIMES_PATH = _DOC_ROOT_PATH + "latimes/";
 
-    public Indexer(Directory indexDirectory) throws Exception {
+    public Indexer(Directory indexDirectory, String transformerModel) throws Exception {
         IndexWriterConfig config = new IndexWriterConfig();
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
         this.iwriter = new IndexWriter(indexDirectory, config);
         this.db = new DbInterface();
+        this.transformerModel = transformerModel;
     }
 
     // This function commits all writes in the index and closes it gracefully.
@@ -43,7 +45,7 @@ public class Indexer {
         Embedding currEmbedding;
         List<String> docIds = this.db.getDocumentIds();
         for (String docId : docIds) {
-            currEmbedding = this.db.getEmbedding(docId);
+            currEmbedding = this.db.getEmbedding(docId, this.transformerModel);
             Document luceneDocument = new Document();
             luceneDocument.add(new StringField("id", currEmbedding.id, Field.Store.YES));
             luceneDocument.add(new KnnVectorField("body", currEmbedding.embeddingFloat, VectorSimilarityFunction.EUCLIDEAN));

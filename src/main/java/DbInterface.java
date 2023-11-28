@@ -57,8 +57,9 @@ public class DbInterface {
     }
 
     // Retrieve the text embedding for a document from the database.
-    public Embedding getEmbedding(String docId) {
+    public Embedding getEmbedding(String docId, String model) {
         this.startSession();
+        //TODO: Change table name
         String sql = "SELECT id, embedding FROM embeddings where id = ?;";
         NativeQuery<Embedding> query = this.currSession.createNativeQuery(sql, Embedding.class);
         query.setParameter(1, docId);
