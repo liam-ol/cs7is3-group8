@@ -53,8 +53,8 @@ public class Indexer {
         luceneDocument.add(new StringField("id", parsedDocument.id, Field.Store.YES));
         luceneDocument.add(new TextField("title", parsedDocument.title, Field.Store.YES));
         luceneDocument.add(new TextField("subtitle", parsedDocument.subtitle, Field.Store.YES));
-        luceneDocument.add(new TextField("summary", parsedDocument.summary, Field.Store.YES));
-        luceneDocument.add(new TextField("body", parsedDocument.body, Field.Store.YES));
+        luceneDocument.add(new TextField("summary", parsedDocument.summary, Field.Store.NO));
+        luceneDocument.add(new TextField("body", parsedDocument.body, Field.Store.NO));
         iwriter.addDocument(luceneDocument);
         return;
     }
@@ -106,7 +106,7 @@ public class Indexer {
                 try {
                     indexDocument(DocParser.parseFR94(currDoc, builder));
                 } catch (Exception e) {
-                    System.out.println(currDoc);
+                    //System.out.println(currDoc);
                 }
             }
         }
@@ -122,7 +122,7 @@ public class Indexer {
                 try {
                     indexDocument(DocParser.parseLATimes(currDoc, builder));
                 } catch (Exception e) {
-                    System.out.println(currDoc);
+                    //System.out.println(currDoc);
                 }
             }
         }
