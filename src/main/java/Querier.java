@@ -34,10 +34,10 @@ public class Querier {
         this.isearcher.setSimilarity(engineSimilarity);
 
         // Create a parser configure it with an analyzer and fields to query.
-        String[] queryFields = new String[] {"title", "subtitle", "body", "summary"};
+        String[] queryFields = new String[] {"title", "text"}; //{"title", "subtitle", "body", "summary"};
         Map<String, Float> boosts = new HashMap<>();
-        boosts.put("body", 10f);
-        boosts.put("title", 0.5f);
+        boosts.put("text", 0.95f);
+        boosts.put("title", 0.05f);
         this.parser = new MultiFieldQueryParser(queryFields, engineAnalyzer, boosts);
 
         // Open the results file for writing.

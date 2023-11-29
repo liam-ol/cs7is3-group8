@@ -27,7 +27,7 @@ public class Indexer {
 
     public Indexer(Analyzer engineAnalyzer, Similarity engineSimilarity, Directory indexDirectory) throws IOException {
         IndexWriterConfig config = new IndexWriterConfig(engineAnalyzer);
-        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
         config.setSimilarity(engineSimilarity);
         this.iwriter = new IndexWriter(indexDirectory, config);
     }
@@ -51,10 +51,12 @@ public class Indexer {
     private void indexDocument(Doc parsedDocument) throws IOException {
         Document luceneDocument = new Document();
         luceneDocument.add(new StringField("id", parsedDocument.id, Field.Store.YES));
-        luceneDocument.add(new TextField("title", parsedDocument.title, Field.Store.YES));
-        luceneDocument.add(new TextField("subtitle", parsedDocument.subtitle, Field.Store.YES));
-        luceneDocument.add(new TextField("summary", parsedDocument.summary, Field.Store.NO));
-        luceneDocument.add(new TextField("body", parsedDocument.body, Field.Store.NO));
+        luceneDocument.add(new TextField("title", parsedDocument.title, Field.Store.NO));
+        String text = parsedDocument.body + " " + parsedDocument.summary + " " + parsedDocument.subtitle;
+        luceneDocument.add(new TextField("text", text.trim(), Field.Store.NO));
+        // luceneDocument.add(new TextField("subtitle", parsedDocument.subtitle, Field.Store.YES));
+        // luceneDocument.add(new TextField("summary", parsedDocument.summary, Field.Store.YES));
+        // luceneDocument.add(new TextField("body", parsedDocument.body, Field.Store.YES));
         iwriter.addDocument(luceneDocument);
         return;
     }
