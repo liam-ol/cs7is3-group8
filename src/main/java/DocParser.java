@@ -130,7 +130,7 @@ public class DocParser {
         String docClean = docRaw.replaceAll("<\\/?P>", "");
         Document doc = readXML(docClean, parser);
 
-        docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent();
+        docID = doc.getElementsByTagName("DOCNO").item(0).getTextContent().trim();
 
         NodeList body = doc.getElementsByTagName("TEXT");
         docBody = (body.getLength() > 0)
