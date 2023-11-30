@@ -18,6 +18,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.BoostQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
@@ -117,19 +118,19 @@ public class Querier {
             irrelevantQuery = irrelevant.isEmpty() ? null : this.parser.parse(irrelevant);
         }
         catch (Exception e) {
-            System.out.println(topic.id);
+            // System.out.println(topic.id);
         }
 
         BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
         for (Query titleQuery : titleQueries) {
-            queryBuilder.add(titleQuery, Occur.SHOULD);
+            queryBuilder.add(new BoostQuery(titleQuery, 0.4f), Occur.SHOULD);
         }
-        queryBuilder.add(descriptionQuery, Occur.SHOULD);
+        queryBuilder.add(new BoostQuery(descriptionQuery, 0.6f), Occur.SHOULD);
         if (relevantQuery != null) {
-            queryBuilder.add(relevantQuery, Occur.SHOULD);
+            queryBuilder.add(new BoostQuery(relevantQuery, 0.15f), Occur.SHOULD);
         }
         if (irrelevantQuery != null) {
-            queryBuilder.add(irrelevantQuery, Occur.FILTER);
+            queryBuilder.add(new BoostQuery(irrelevantQuery, 0.15f), Occur.FILTER);
         }
 
         Query query = queryBuilder.build();
