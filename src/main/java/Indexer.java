@@ -27,7 +27,7 @@ public class Indexer {
 
     public Indexer(Analyzer engineAnalyzer, Similarity engineSimilarity, Directory indexDirectory) throws IOException {
         IndexWriterConfig config = new IndexWriterConfig(engineAnalyzer);
-        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
         config.setSimilarity(engineSimilarity);
         this.iwriter = new IndexWriter(indexDirectory, config);
     }

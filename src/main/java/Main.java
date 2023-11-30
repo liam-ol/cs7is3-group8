@@ -35,7 +35,8 @@ public class Main {
         /* INDEX QUERYING */
         Querier querier = new Querier(analyzer, similarity, directory);
         for (Topic top: tparser.topics) {
-            querier.queryIndex(top.id, top.description);
+            // querier.queryIndex(top.id, top.description);
+            querier.queryIndex(top);
         }
         querier.shutDown();
         directory.close();
