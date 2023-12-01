@@ -40,6 +40,7 @@ build/
 Assignment Two/
 topics
 index
-results.txt
+results*
 trec_eval*
 *qrel*
+WordNet-3.0
