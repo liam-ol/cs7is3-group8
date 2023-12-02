@@ -6,7 +6,7 @@
     <session-factory>
         <!-- JDBC Database connection settings -->
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite://home/azureuser/cs7is3-group8/db/documents-bert.db</property>
+        <property name="hibernate.connection.url">jdbc:sqlite://home/azureuser/ir2-vector/cs7is3-group8/db/documents.db</property>
         <property name="hibernate.connection.username"></property>
         <property name="hibernate.connection.password"></property>
         <property name="hibernate.dialect">org.hibernate.community.dialect.SQLiteDialect</property>
@@ -22,7 +22,7 @@
         <property name="hibernate.dialect">org.hibernate.community.dialect.SQLiteDialect</property>
 
         <!-- Echo all executed SQL to stdout -->
-        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.show_sql">false</property>
 
         <!-- Drop and re-create the database schema on startup -->
         <property name="hibernate.hbm2ddl.auto">update</property>
