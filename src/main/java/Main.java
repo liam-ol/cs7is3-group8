@@ -8,7 +8,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         /* SEARCH ENGINE PARAMETERS */
-        String transformerModel = "miniLM";
+        int modelEnmeddingSize = 768; //328;
+        String transformerModel = "bert"; //"miniLM";
         String indexDirectory = "./index-" + transformerModel;
         Directory directory = FSDirectory.open(Paths.get(indexDirectory));
 
@@ -17,11 +18,10 @@ public class Main {
         if (DirectoryReader.indexExists(directory)) {
             System.out.println("Index is already built.");
         } else {
-            indexer = new Indexer(directory, transformerModel);
+            indexer = new Indexer(directory, transformerModel, modelEnmeddingSize);
             indexer.readAndIndexDocuments();
             indexer.shutDown();
         }
-
 
         /* TOPIC PARSING */
         TopicParser tparser = new TopicParser();

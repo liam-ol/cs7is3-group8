@@ -57,21 +57,20 @@ public class DbInterface {
     }
 
     // Retrieve the text embedding for a document from the database.
-    public Embedding getEmbedding(String docId, String model) {
+    public Embedding getEmbedding(String docId, String model, int embeddingSize) {
         this.startSession();
-        //TODO: Change table name
-        String sql = "SELECT id, embedding FROM embeddings where id = ?;";
+        String sql = "SELECT id, embedding FROM " + model + "_embeddings where id = ?;";
         NativeQuery<Embedding> query = this.currSession.createNativeQuery(sql, Embedding.class);
         query.setParameter(1, docId);
         Embedding embedding = query.getSingleResultOrNull();
-        embedding.convertToFloat();
+        embedding.convertToFloat(embeddingSize);
         return embedding;
     }
 
     // Get a list with the IDs of all documents in the database.
-    public List<String> getDocumentIds() {
+    public List<String> getDocumentIds(String model) {
         this.startSession();
-        String sql = "SELECT id FROM embeddings;";
+        String sql = "SELECT id FROM " + model + "_embeddings;";
         NativeQuery<String> query = this.currSession.createNativeQuery(sql, String.class);
         List<String> docIds = query.getResultList();
         return docIds;

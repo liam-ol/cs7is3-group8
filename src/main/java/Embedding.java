@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,17 +21,23 @@ public class Embedding {
     }
 
     // This function converts the embeddingString from JSON string to float array.
-    public void convertToFloat() {
-        // Parse the JSON object
-        JSONObject jsonObject = new JSONObject(this.embeddingString);
-        // Extract the embedding array
-        JSONArray embeddingArray = jsonObject.getJSONArray("embedding");
-        // Extract the first element of the embedding array
-        JSONArray firstElementArray = embeddingArray.getJSONArray(0);
-        // Convert the JSONArray to a float[] array
-        float[] embeddingValues = new float[firstElementArray.length()];
-        for (int i = 0; i < firstElementArray.length(); i++) {
-            embeddingValues[i] = (float) firstElementArray.getDouble(i);
+    public void convertToFloat(int embeddingSize) {
+        float[] embeddingValues;
+        try {
+            // Parse the JSON object
+            JSONObject jsonObject = new JSONObject(this.embeddingString);
+            // Extract the embedding array
+            JSONArray embeddingArray = jsonObject.getJSONArray("embedding").getJSONArray(0);
+            // Convert the JSONArray to a float[] array
+            embeddingValues = new float[embeddingArray.length()];
+            for (int i = 0; i < embeddingArray.length(); i++) {
+                embeddingValues[i] = (float) embeddingArray.getDouble(i);
+            }
+        }
+        catch (Exception e) {
+            embeddingValues = new float[embeddingSize];
+            Arrays.fill(embeddingValues, 0.0f);
+            System.out.println(this.id + "Problematic embedding");
         }
         this.embeddingFloat = embeddingValues;
         this.embeddingString = "";

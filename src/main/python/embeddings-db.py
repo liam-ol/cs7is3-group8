@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L12-v2')
 
-conn = sqlite3.connect('../../../db/documents.db')
+conn = sqlite3.connect('../../../db/documents-bert.db')
 read_cursor = conn.cursor()
 write_cursor = conn.cursor()
 

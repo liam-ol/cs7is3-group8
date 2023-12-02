@@ -41,6 +41,8 @@ public class Querier {
     public void queryIndex(int queryId, String queryString) throws Exception {
         
         int docRank = 0;
+
+        System.out.print("Processing topic " + queryId + "... ");
         
         // Fetch the text embedding of the query and generate a vector query.
         float[] queryVector = fetchEmbedding(queryString);
@@ -48,9 +50,7 @@ public class Querier {
         
         // Get the set of results and write the ID, rank and score of each result in a trec_eval-compatible way.
         ScoreDoc[] hits = this.isearcher.search(query, _MAX_RESULTS).scoreDocs;
-        if (hits.length > 0) {
-            System.out.println("Results found: " + hits.length);
-        }
+        System.out.println(hits.length + " results found");
         for (int i = 0; i < hits.length; i++) {
             Document hitDoc = isearcher.doc(hits[i].doc);
             docRank = i + 1;

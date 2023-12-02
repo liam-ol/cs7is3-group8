@@ -15,6 +15,7 @@ public class Indexer {
     private IndexWriter iwriter;
     private DbInterface db;
     private String transformerModel;
+    private int embeddingSize;
 
     static final String _DOC_ROOT_PATH = "./Assignment Two/";
     static final String _FT_PATH = _DOC_ROOT_PATH + "ft/";
@@ -22,12 +23,13 @@ public class Indexer {
     static final String _FBIS_PATH = _DOC_ROOT_PATH + "fbis/";
     static final String _LATIMES_PATH = _DOC_ROOT_PATH + "latimes/";
 
-    public Indexer(Directory indexDirectory, String transformerModel) throws Exception {
+    public Indexer(Directory indexDirectory, String transformerModel, int embeddingSize) throws Exception {
         IndexWriterConfig config = new IndexWriterConfig();
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
         this.iwriter = new IndexWriter(indexDirectory, config);
         this.db = new DbInterface();
         this.transformerModel = transformerModel;
+        this.embeddingSize = embeddingSize;
     }
 
     // This function commits all writes in the index and closes it gracefully.
@@ -43,15 +45,16 @@ public class Indexer {
         this.db.startSession();
 
         Embedding currEmbedding;
-        List<String> docIds = this.db.getDocumentIds();
+        List<String> docIds = this.db.getDocumentIds(this.transformerModel);
         for (String docId : docIds) {
-            currEmbedding = this.db.getEmbedding(docId, this.transformerModel);
+            System.out.println("Indexing document: " + docId);
+            currEmbedding = this.db.getEmbedding(docId, this.transformerModel, this.embeddingSize);
             Document luceneDocument = new Document();
             luceneDocument.add(new StringField("id", currEmbedding.id, Field.Store.YES));
-            luceneDocument.add(new KnnVectorField("body", currEmbedding.embeddingFloat, VectorSimilarityFunction.EUCLIDEAN));
+            luceneDocument.add(new KnnVectorField("body", currEmbedding.embeddingFloat, VectorSimilarityFunction.DOT_PRODUCT));
             this.iwriter.addDocument(luceneDocument);
         }
-        System.out.println("Finished storing all documents in database");
+        System.out.println("Indexing finished");
         this.db.shutDown();
     }
 
