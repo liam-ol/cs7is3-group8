@@ -54,7 +54,7 @@ public class Querier {
         for (int i = 0; i < hits.length; i++) {
             Document hitDoc = isearcher.doc(hits[i].doc);
             docRank = i + 1;
-            this.queryResultsWriter.write(queryId + " Q0 " + hitDoc.get("id") + " " + docRank + " " + hits[i].score + " STANDARD\n" );
+            this.queryResultsWriter.write(queryId + " Q0 " + hitDoc.get("id").trim() + " " + docRank + " " + hits[i].score + " STANDARD\n" );
         }
         return;
     }

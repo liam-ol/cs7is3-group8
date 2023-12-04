@@ -79,7 +79,6 @@ public class DbInterface {
     // Commit and close database connection gracefully.
     public void shutDown() {
         this.currTransaction.commit();
-        System.out.println("Transaction completed");
         this.currSession.close();
         this.sfactory.close();
     }

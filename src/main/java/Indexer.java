@@ -46,8 +46,8 @@ public class Indexer {
 
         Embedding currEmbedding;
         List<String> docIds = this.db.getDocumentIds(this.transformerModel);
+        System.out.println("Indexing documents...");
         for (String docId : docIds) {
-            System.out.println("Indexing document: " + docId);
             currEmbedding = this.db.getEmbedding(docId, this.transformerModel, this.embeddingSize);
             Document luceneDocument = new Document();
             luceneDocument.add(new StringField("id", currEmbedding.id, Field.Store.YES));
